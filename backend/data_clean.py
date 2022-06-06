@@ -7,28 +7,28 @@ from scrape import download_episodes, countdown, episodes, path_to_ind
 
 ### Data Cleanup
 # This file exists to do a bunch of cleanup after a download call.
+#TODO Again this needs to be a global variable
+episodes = 1
 
-episodes = 3
-
-this_american_life_episodes = countdown(episodes)
+# Two iterators, one to get titles, and the other for getting full act transcripts
+title_iterator = countdown(episodes)
+act_iterator = countdown(episodes)
 path_to_episode_csv = '/Users/dangercat/Documents/GitHub/this-american-life-episode-finder/data/transcription-html/'
 
-header = ['episode_id', 'episode title', 'prologue', 'act1 title', 'act1', 'act2 title', 'act2', 'act3 title', 'act3', 'act4 title', 'act4', 'act5 title', 'act5', 'act6 title', 'act6']
+## Common html tags that help find the act metadata of an episode
+act1_title_line_before = '<div class="act" id="act1">'
+act2_title_line_before = '<div class="act" id="act2">'
+act3_title_line_before = '<div class="act" id="act3">'
+act4_title_line_before = '<div class="act" id="act4">'
+act5_title_line_before = '<div class="act" id="act5">'
+act6_title_line_before = '<div class="act" id="act6">'
+act7_title_line_before = '<div class="act" id="act7">'
+act8_title_line_before = '<div class="act" id="act8">'
+act9_title_line_before = '<div class="act" id="act9">'
 
 def get_episode_title_act_names():
 
-    ## Common html tags that help find the act metadata of an episode
-    act1_title_line_before = '<div class="act" id="act1">'
-    act2_title_line_before = '<div class="act" id="act2">'
-    act3_title_line_before = '<div class="act" id="act3">'
-    act4_title_line_before = '<div class="act" id="act4">'
-    act5_title_line_before = '<div class="act" id="act5">'
-    act6_title_line_before = '<div class="act" id="act6">'
-    act7_title_line_before = '<div class="act" id="act7">'
-    act8_title_line_before = '<div class="act" id="act8">'
-    act9_title_line_before = '<div class="act" id="act9">'
-
-    for episode in this_american_life_episodes:
+    for episode in title_iterator:
 
         path = f'/Users/dangercat/Documents/GitHub/this-american-life-episode-finder/data/tal-site-data/www.thisamericanlife.org/{episode}/transcript.html'
 
@@ -38,6 +38,7 @@ def get_episode_title_act_names():
 
             soup.title.string
             print(soup.title.string)
+            print('--------------------------------')
             # u'The Dormouse's story'
 
         with open(path) as transcript:
@@ -99,6 +100,69 @@ def get_episode_title_act_names():
                     act9_title = act9_title.replace('<h3>', '')
                     act9_title = act9_title.replace('</h3>', '')
                     print(act9_title)
+                
+                
+            print('\n')
+
+
+
+def get_act_transcripts():
+    for episode in act_iterator:
+        path = f'/Users/dangercat/Documents/GitHub/this-american-life-episode-finder/data/tal-site-data/www.thisamericanlife.org/{episode}/transcript.html'
+
+        with open(path) as transcript:
+            soup = BeautifulSoup(transcript, 'html.parser')
+
+            while act is not None:
+
+            # Make a loop to do this work
+            # check for none, if none, then pass
+
+            # Prologue
+            prologue = soup.find(attrs={'class':'act', 'id':'prologue'})
+            prologue = prologue.get_text(separator=" ")
+            print(prologue)
+            # Act 1
+            act1 = soup.find(attrs={'class':'act', 'id':f'{act}'})
+            act1 = act1.get_text(separator=" ")
+            print(act1)
+            # Act 2
+            act2 = soup.find(attrs={'class':'act', 'id':'act2'})
+            act2 = act2.get_text(separator=" ")
+            print(act2)
+            # Act 3
+            act3 = soup.find(attrs={'class':'act', 'id':'act3'})
+            act3 = act3.get_text(separator=" ")
+            print(act3)
+            # Act 4
+            act4 = soup.find(attrs={'class':'act', 'id':'act4'})
+            act4 = act4.get_text(separator=" ")
+            print(act4)
+            # Act 5
+            act5 = soup.find(attrs={'class':'act', 'id':'act5'})
+            act5 = act5.get_text(separator=" ")
+            print(act5)
+            # Act 6
+            act6 = soup.find(attrs={'class':'act', 'id':'act6'})
+            act6 = act6.get_text(separator=" ")
+            print(act6)
+            # Act 7
+            act7 = soup.find(attrs={'class':'act', 'id':'act7'})
+            act7 = act7.get_text(separator=" ")
+            print(act7)
+            # Act 8
+            act8 = soup.find(attrs={'class':'act', 'id':'act8'})
+            act8 = act8.get_text(separator=" ")
+            print(act8)
+            # Act 9
+            act9 = soup.find(attrs={'class':'act', 'id':'act9'})
+            act9 = act9.get_text(separator=" ")
+            print(act9)
+
+
+
+
+get_act_transcripts()
 
 get_episode_title_act_names()
 
