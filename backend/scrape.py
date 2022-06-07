@@ -37,7 +37,8 @@ def download_episodes():
         # if the transcript exists, don't try downloading it
         if os.path.exists(path_to_ind + str(episode)) == True:
             pass
-
+        
+        #TODO Impliment a check to see if the url exists, have this be the way we check if new episodes are posted
         elif episode > 0:
             save_webpage(
                 url=f"https://www.thisamericanlife.org/{episode}/transcript",

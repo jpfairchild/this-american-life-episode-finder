@@ -7,7 +7,7 @@ conn = sqlite3.connect(':memory:')
 c = conn.cursor()
 
 c.execute("""CREATE TABLE episodes (
-            episode_id integer,
+            id integer,
             episode_title text,
             prologue text,
             act1_title text,
