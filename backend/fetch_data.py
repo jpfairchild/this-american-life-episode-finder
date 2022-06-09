@@ -1,33 +1,35 @@
 
 from bs4 import BeautifulSoup
+from scrape import countdown, episodes
 
 class fetch_data_from_html():
 
-    # __init__
+    ### __init__
     # fet = fetch_episode_title(episode_id)
-    # fpatat = fetch_prologue_act_titles_act_text(episode_id)
-    def __init__(self, id, fet):
+    # fat = fetch_act_titles(episode_id)
+    # fa = fetch_acts(episode_id)
+    def __init__(self, id, fet, fat, fa):
         self.id = id
         self.episode_title = fet(self.id)
-        self.prologue = None
-        self.act1_title = None
-        self.act1 = None
-        self.act2_title = None
-        self.act2 = None
-        self.act3_title = None
-        self.act3 = None
-        self.act4_title = None
-        self.act4 = None
-        self.act5_title = None
-        self.act5 = None
-        self.act6_title = None
-        self.act6 = None
-        self.act7_title = None
-        self.act7 = None
-        self.act8_title = None
-        self.act8 = None
-        self.act9_title = None
-        self.act9 = None
+        self.prologue = fa(self.id, 'prologue')
+        self.act1_title = fat(self.id, 'act1')
+        self.act1 = fa(self.id, 'act1')
+        self.act2_title = fat(self.id, 'act2')
+        self.act2 = fa(self.id, 'act2')
+        self.act3_title = fat(self.id, 'act3')
+        self.act3 = fa(self.id, 'act3')
+        self.act4_title = fat(self.id, 'act4')
+        self.act4 = fa(self.id, 'act4')
+        self.act5_title = fat(self.id, 'act5')
+        self.act5 = fa(self.id, 'act5')
+        self.act6_title = fat(self.id, 'act6')
+        self.act6 = fa(self.id, 'act6')
+        self.act7_title = fat(self.id, 'act7')
+        self.act7 = fa(self.id, 'act7')
+        self.act8_title = fat(self.id, 'act8')
+        self.act8 = fa(self.id, 'act8')
+        self.act9_title = fat(self.id, 'act9')
+        self.act9 = fa(self.id, 'act9')
 
     def __repr__(self):
         # attribute_list = [a for a in dir(self) if not a.startswith('__')]
@@ -49,7 +51,7 @@ class fetch_data_from_html():
         return self.episode_title
 
 
-### Fetches ###
+### ----- Fetches ----- ###
 # Fetch Title
 def fetch_episode_title(episode_id):
 
@@ -58,67 +60,75 @@ def fetch_episode_title(episode_id):
 
     with open(path) as transcript:
         soup = BeautifulSoup(transcript, 'html.parser')
-        if ' - This American Life' in soup.title.string:
+        if soup.find('title') == None:
+            return None
+        elif ' - This American Life' in soup.title.string:
             title = soup.title.string
-            episode_title = title.replace(' - This American Life', '')
+            title = title.replace(' - This American Life', '')
+            episode_title = title.split(' ', 1)[1]
             return episode_title
         else:
             episode_title = soup.title.string
             return episode_title
 
+# There is no episode for 497
+# mr = fetch_episode_title(497)
+# print(mr)
 
-# Fetch prologue and acts
-def fetch_prologue_act_titles_act_text(episode_id):
+# d = countdown(episodes)
+# for epi in d:
+#     vr = fetch_episode_title(epi)
+#     print(vr)
+
+# Fetch Act Titles
+def fetch_act_titles(episode_id, part):
     path = f'/Users/dangercat/Documents/GitHub/this-american-life-episode-finder/data/tal-site-data/www.thisamericanlife.org/{episode_id}/transcript.html'
+    
+    # Act title plus full act text
+    with open(path) as transcript:
 
+        soup = BeautifulSoup(transcript, 'html.parser')
+        # Check if the act exists, most episodes have < 3 acts
+        if soup.find(attrs={'class':'act', 'id':f'{part}'}) == None:
+            return None
+        else:
+            full_act = soup.find(attrs={'class':'act', 'id':f'{part}'})
+            full_act = full_act.get_text(separator=' ')
+            lines = full_act.splitlines()
+
+            # Isolate the title of the act
+            act_title = lines[1].strip()
+            return act_title
+
+# Fetch Acts Full Text
+def fetch_acts(episode_id, part):
+    path = f'/Users/dangercat/Documents/GitHub/this-american-life-episode-finder/data/tal-site-data/www.thisamericanlife.org/{episode_id}/transcript.html'
+    
     # Act Title plus full act text
     with open(path) as transcript:
 
         soup = BeautifulSoup(transcript, 'html.parser')
-        act_list = ['prologue', 'act1', 'act2', 'act3', 'act4', 'act5', 'act6', 'act7', 'act8', 'act9']
 
-        for act in act_list:
+        if soup.find(attrs={'class':'act', 'id':f'{part}'}) == None:
+            return None
+        else:
+            full_act = soup.find(attrs={'class':'act', 'id':f'{part}'})
+            full_act = full_act.get_text(separator=' ')
+            lines = full_act.splitlines()
 
-            if soup.find(attrs={'class':'act', 'id':f'{act}'}) == None:
-                pass
-            else:
-                full_act = soup.find(attrs={'class':'act', 'id':f'{act}'})
-                full_act = full_act.get_text(separator=' ')
-                lines = full_act.splitlines()
-
-                if act == 'prologue':
-                    prologue = lines[3].lstrip()
-                elif act == 'act1':
-                    act1_title = lines[1].lstrip()
-                    act1 = lines[3].lstrip()
-                elif act == 'act2':
-                    act2_title = lines[1].lstrip()
-                    act2 = lines[3].lstrip()
-                elif act == 'act3':
-                    act3_title = lines[1].lstrip()
-                    act3 = lines[3].lstrip()
-                elif act == 'act4':
-                    act4_title = lines[1].lstrip()
-                    act4 = lines[3].lstrip()
-                elif act == 'act5':
-                    act5_title = lines[1].lstrip()
-                    act5 = lines[3].lstrip()
-                elif act == 'act6':
-                    act6_title = lines[1].lstrip()
-                    act6 = lines[3].lstrip()
-                elif act == 'act7':
-                    act7_title = lines[1].lstrip()
-                    act7 = lines[3].lstrip()
-                elif act == 'act8':
-                    act8_title = lines[1].lstrip()
-                    act8 = lines[3].lstrip()
-                elif act == 'act9':
-                    act9_title = lines[1].lstrip()
-                    act9 = lines[3].lstrip()
-
+            act = lines[3].lstrip()
+            return act
 
 ## Test Calls
-vr = fetch_data_from_html(451, fetch_episode_title)
+## Testing Act titles, and act text
+# ar = fetch_acts(441, 'prologue')
+# 421 seems to be werid
+# ar = fetch_act_titles(771, 'act2')
+# print(ar)
+
+## testing the class
+# vr = fetch_data_from_html(454, fetch_episode_title, fetch_act_titles, fetch_acts)
 # vr.fetch_episode_title()
 # vr.fetch_prologue_act_titles_act_text()
-print(vr)
+# print(vr)
+

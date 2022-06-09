@@ -50,6 +50,7 @@ def download_episodes():
                 delay=None,
                 threaded=False,
             )
+            print(str(episode) + ' has been downloaded successfully')
 
         elif episode == 0:
             this_american_life_episodes.close()
