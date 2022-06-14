@@ -71,15 +71,6 @@ def fetch_episode_title(episode_id):
             episode_title = soup.title.string
             return episode_title
 
-# There is no episode for 497
-# mr = fetch_episode_title(497)
-# print(mr)
-
-# d = countdown(episodes)
-# for epi in d:
-#     vr = fetch_episode_title(epi)
-#     print(vr)
-
 # Fetch Act Titles
 def fetch_act_titles(episode_id, part):
     path = f'/Users/dangercat/Documents/GitHub/this-american-life-episode-finder/data/tal-site-data/www.thisamericanlife.org/{episode_id}/transcript.html'

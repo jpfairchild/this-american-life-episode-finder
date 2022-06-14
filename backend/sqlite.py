@@ -49,11 +49,11 @@ try:
 
                 # if the transcript exists, then pass it to the database
                 if os.path.exists(path_to_ind + str(episode)) == True:
-
                     ### Data insert
                     epi  = fetch_data_from_html(episode, fetch_episode_title, fetch_act_titles, fetch_acts)
                     # Inserting using class call
-                    c.execute("""INSERT INTO episodes VALUES (:id, 
+                    try:
+                        c.execute("""INSERT INTO episodes VALUES (:id, 
                                                             :episode_title, 
                                                             :prologue, 
                                                             :act1_title, 
@@ -95,7 +95,9 @@ try:
                                                             "act8": epi.act8, 
                                                             "act9_title": epi.act9_title, 
                                                             "act9": epi.act9})
-                    print(str(episode) + ' has been uploaded to the database successfully')            
+                        print(str(episode) + ' has been uploaded to the database successfully')
+                    except:
+                        print(str(episode) + ' aready in database')
                 else:
                     print('fuck')
 
@@ -156,15 +158,14 @@ try:
             print('fuck')
 
     ### Pass Function Calls
-    # pass_all_data()
     # pass_single_episode(500)
 
     #count = c.execute(sqlite_insert_query)
-    c.execute("SELECT * FROM episodes WHERE episode_title=:episode_title", {'episode_title': None})
-
+    c.execute("SELECT * FROM episodes WHERE episode_title=:episode_title", {'episode_title': 'New Beginnings'})
+    conn.commit()
     # print(c.fetchone())
     # print(c.fetchmany(2))
-    print(c.fetchall())
+    # print(c.fetchall())
 
     conn.commit()
     # print("Record inserted successfully into SqliteDb_developers table ", c.rowcount)
